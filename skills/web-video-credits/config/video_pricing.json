@@ -1,0 +1,76 @@
+{
+  "verified_at": "2026-09-08",
+  "max_age_days": 30,
+  "currency": "USD",
+  "models": {
+    "fal-ai/kling-video/o3/standard/image-to-video": {
+      "silent_usd_per_second": "0.084",
+      "audio_usd_per_second": "0.112",
+      "duration_min": 3,
+      "duration_max": 15,
+      "source": "https://fal.ai/models/fal-ai/kling-video/o3/standard/image-to-video",
+      "schema_source": "https://fal.ai/models/fal-ai/kling-video/o3/standard/image-to-video/api"
+    },
+    "fal-ai/kling-video/o3/standard/reference-to-video": {
+      "verified_at": "2026-09-13",
+      "silent_usd_per_second": "0.084",
+      "audio_usd_per_second": "0.112",
+      "duration_min": 3,
+      "duration_max": 15,
+      "source": "https://fal.ai/models/fal-ai/kling-video/o3/standard/reference-to-video",
+      "schema_source": "https://fal.ai/models/fal-ai/kling-video/o3/standard/reference-to-video/api"
+    },
+    "minimax/h3-max/image-to-video": {
+      "verified_at": "2026-09-13",
+      "usd_per_second": "0.02",
+      "provider_audio_mode": "always_on",
+      "duration_min": 5,
+      "duration_max": 15,
+      "resolution": "768P",
+      "promotional_rate_through": "2026-09-14",
+      "regular_rate_from": "2026-09-15",
+      "regular_usd_per_second": "0.08",
+      "source": "https://fal.ai/minimax-h3-max",
+      "schema_source": "https://fal.ai/models/minimax/h3-max/image-to-video/api"
+    },
+    "fal-ai/kling-video/v3/pro/image-to-video": {
+      "silent_usd_per_second": "0.112",
+      "audio_usd_per_second": "0.168",
+      "duration_min": 3,
+      "duration_max": 15,
+      "source": "https://fal.ai/models/fal-ai/kling-video/v3/pro/image-to-video",
+      "schema_source": "https://fal.ai/models/fal-ai/kling-video/v3/pro/image-to-video/api"
+    },
+    "fal-ai/kling-video/v3/standard/image-to-video": {
+      "verified_at": "2026-09-13",
+      "silent_usd_per_second": "0.084",
+      "audio_usd_per_second": "0.126",
+      "duration_min": 3,
+      "duration_max": 15,
+      "source": "https://fal.ai/models/fal-ai/kling-video/v3/standard/image-to-video",
+      "schema_source": "https://fal.ai/models/fal-ai/kling-video/v3/standard/image-to-video/api"
+    },
+    "fal-ai/veo3.1/fast/first-last-frame-to-video": {
+      "verified_at": "2026-09-12",
+      "silent_usd_per_second": "0.10",
+      "audio_usd_per_second": "0.15",
+      "duration_min": 4,
+      "duration_max": 8,
+      "allowed_durations": [4, 6, 8],
+      "resolution": "720p",
+      "source": "https://fal.ai/models/fal-ai/veo3.1/fast/first-last-frame-to-video",
+      "schema_source": "https://fal.ai/models/fal-ai/veo3.1/fast/first-last-frame-to-video/api"
+    },
+    "google/gemini-omni-flash/v1.1/image-to-video": {
+      "verified_at": "2026-09-12",
+      "usd_per_second": "0.10",
+      "provider_audio_mode": "route_default_not_switchable",
+      "duration_min": 3,
+      "duration_max": 10,
+      "resolution": "720p",
+      "aspect_ratio": "16:9",
+      "source": "https://fal.ai/models/google/gemini-omni-flash/v1.1/image-to-video",
+      "schema_source": "https://fal.ai/models/google/gemini-omni-flash/v1.1/image-to-video/api"
+    }
+  }
+}
