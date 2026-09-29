@@ -1,9 +1,9 @@
 ---
-name: web-video-credits
-description: Operate a local Chrome browser API for free-credit video websites, including start and end image jobs. Use for inspecting or running Kling, Dreamina, PixVerse, Vidu, Flow, Krea, SeaArt, OpenArt, or Hailuo website workflows.
+name: frame-hopper
+description: Hop between nine video-site pages through a local Chrome API. Inspect account state and free credits, stage start/end frames, and guard submissions with a job ledger; calibrate each live site before use.
 ---
 
-# Web video credits
+# FrameHopper
 
 Work from this installed skill's directory, which contains the `backend`, `tools`, and `config` folders. Read [the API reference](references/API.md) before preparing a job.
 

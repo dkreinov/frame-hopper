@@ -1,15 +1,15 @@
-# Web Video Credits skill
+# FrameHopper
 
-A Codex skill and local Python browser API for inspecting video generation websites through a Chrome profile that you sign into yourself. It lists Kling, Dreamina, PixVerse, Vidu, Google Flow, Krea, SeaArt, OpenArt, and Hailuo. The browser API supports a guarded start/end image job ledger, uploads, submission, and downloads.
+FrameHopper is a Codex skill and local Chrome browser bridge for video creation sites. It catalogs Kling, Dreamina, PixVerse, Vidu, Google Flow, Krea, SeaArt, OpenArt, and Hailuo. Agents can inspect visible forms, stage start/end images, and track guarded generation jobs through upload, submission, and download.
 
 **Status:** Browser navigation and the guarded job flow have offline tests. The nine websites have not all been authenticated or verified end to end. Each site's current selectors, models, free balance, exact price, and output flow need live calibration. This uses website pages, not official provider APIs. Website changes may break it.
 
 ## Install as a Codex skill
 
-Use the Codex skill installer with GitHub repository `dkreinov/web-video-credits-skill` and path `skills/web-video-credits`, or clone this repository and run:
+Use the Codex skill installer with GitHub repository `dkreinov/frame-hopper` and path `skills/frame-hopper`, or clone this repository and run:
 
 ```bash
-python skills/web-video-credits/scripts/install_skill.py
+python skills/frame-hopper/scripts/install_skill.py
 ```
 
 The installed skill includes its Python API code. In the installed skill directory, create a Python environment and install the dependencies:
@@ -22,7 +22,7 @@ Install Google Chrome on the same machine. The API runs a visible persistent Chr
 
 ## Read-only check
 
-Run from `skills/web-video-credits` in the cloned repository, or from the installed skill directory:
+Run from `skills/frame-hopper` in the cloned repository, or from the installed skill directory:
 
 ```python
 from backend.services.web_provider_browser_client import WebProviderBrowserClient
@@ -34,10 +34,10 @@ print(browser.status("dreamina"))
 print(browser.snapshot("dreamina")["visible_text"][:1000])
 ```
 
-`unverified` account status does not mean signed in. The website can still show a login prompt. For prepared jobs, use `WebProviderGateway` and the methods in [the API reference](skills/web-video-credits/references/API.md). Uploading images and spending credits require authorization for the current task and a live check of the exact free-credit cost.
+`unverified` account status does not mean signed in. The website can still show a login prompt. For prepared jobs, use `WebProviderGateway` and the methods in [the API reference](skills/frame-hopper/references/API.md). Uploading images and spending credits require authorization for the current task and a live check of the exact free-credit cost.
 
 ## Development
 
-From `skills/web-video-credits`, run `python -m pytest tests -q`. Tests use local fixtures and do not spend provider credits.
+From `skills/frame-hopper`, run `python -m pytest tests -q`. Tests use local fixtures and do not spend provider credits.
 
 This repository contains source code and a skill; it contains no browser profile, cookies, access token, account credentials, or user media.
