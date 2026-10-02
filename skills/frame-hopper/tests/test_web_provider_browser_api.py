@@ -25,6 +25,7 @@ def test_loopback_api_requires_its_private_token(tmp_path: Path) -> None:
         assert client.get("/v1/providers").status_code == 401
         token = (tmp_path / "access.token").read_text(encoding="ascii").strip()
         response = client.get("/v1/providers", headers={"X-Gateway-Token": token})
+        session = client.get("/v1/session", headers={"X-Gateway-Token": token})
     assert response.status_code == 200
     assert {item["name"] for item in response.json()["providers"]} == {
         "kling", "dreamina", "pixverse", "vidu", "flow", "krea",
@@ -32,6 +33,7 @@ def test_loopback_api_requires_its_private_token(tmp_path: Path) -> None:
         "firefly", "magnific", "elevenlabs", "cartesia", "fish-audio",
         "minimax-audio", "suno",
     }
+    assert session.json() == {"active_provider": None, "staged_job_count": 0}
 
 
 def test_model_filter_tracks_model_specific_free_access(tmp_path: Path) -> None:

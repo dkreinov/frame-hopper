@@ -22,6 +22,8 @@ print(browser.status("dreamina"))
 print(browser.snapshot("dreamina"))
 ```
 
+For a site-by-model credit inventory, run `python -m tools.cli.web_provider_inventory --live` from this skill directory. Add `--model kling`, `--media audio`, `--free-only`, or `--json` to filter or export it. The live scan navigates the one API tab and refuses to run while media is staged. It reports a number only when a balance-like label is visible, marks that number unverified, and leaves model cost and possible generation count unknown until the exact signed-in form is checked.
+
 The API drives one active provider tab in a persistent, visible Chrome profile. The account owner completes website sign-in, CAPTCHA, and terms prompts there. A Codex in-app browser sign-in does not transfer. `account_status="unverified"` is not proof of sign-in. Reinspect after switching providers.
 
 For a start/end job, use `WebProviderGateway` to prepare a validated `FamilyShotPlan` with the exact two local images, model, controls, and `free_credits_only=True`. Inspect the current signed-in website form, exact price, and visible free balance. Record a matching observation and approval in the gateway, then use `browser.stage` with separate verified upload controls for each image. Use `browser.submit` only while the current form matches the approved request and visible free credits cover the exact cost. Resolve an uncertain submission in website history before retrying. Download and import a completed result through the gateway.

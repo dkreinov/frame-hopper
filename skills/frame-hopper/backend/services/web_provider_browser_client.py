@@ -85,6 +85,10 @@ class WebProviderBrowserClient:
         """List curated model families; prices and account access still need a live check."""
         return self._call("GET", "/v1/models")
 
+    def session(self) -> dict[str, Any]:
+        """Return active provider and pending staged-upload count, without secrets."""
+        return self._call("GET", "/v1/session")
+
     def providers(self, *, model: str | None = None, media: str | None = None,
                   free_only: bool = False, timeout_seconds: float = 90) -> dict[str, Any]:
         """Find websites carrying a model, with optional advertised free access.

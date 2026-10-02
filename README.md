@@ -38,6 +38,8 @@ print(browser.snapshot("dreamina")["visible_text"][:1000])
 
 `unverified` account status does not mean signed in. The website can still show a login prompt. For prepared jobs, use `WebProviderGateway` and the methods in [the API reference](skills/frame-hopper/references/API.md). Uploading images and spending credits require authorization for the current task and a live check of the exact free-credit cost.
 
+To list every site by model and inspect visible account balances, run `python -m tools.cli.web_provider_inventory --live` from `skills/frame-hopper`. Use `--model kling` or `--media audio` to narrow the report and `--json` for agent use. Credit figures are unverified observations until the signed-in form confirms free eligibility; generation counts require an exact model quote.
+
 ## Development
 
 From `skills/frame-hopper`, run `python -m pytest tests -q`. Tests use local fixtures and do not spend provider credits.

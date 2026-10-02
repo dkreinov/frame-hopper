@@ -23,6 +23,10 @@ browser.inspect("dreamina", "button")
 
 `providers(model=..., media=..., free_only=...)` filters the dated catalog by advertised model family and model-specific free access. `free_only` includes conditional promotions, so it does not establish available credits in this account. The HTTP routes are `GET /v1/models` and `GET /v1/providers?model=kling&free_only=true` (or `media=audio`). Read [current provider research](PROVIDER_RESEARCH.md) for source links and limitations. Newly added sites have navigation and inspection only; audio generation is not implemented.
 
+## Credit inventory command
+
+Run `python -m tools.cli.web_provider_inventory --live` to list every site and model while inspecting visible balances in the shared Chrome profile. `--model kling` narrows both sites and rows; `--media audio` or `--free-only` filters further. Add `--json` for agents. Omit `--live` for a fast offline catalog without account observations. The live scan navigates the service's one tab, refuses when a job has staged media or sign-in is underway, and restores the original site afterward. Its balance figures are labeled observations, not verified free entitlement. Credits are shared by site; exact per-model generation costs and possible counts remain unknown until a selected signed-in form is inspected. The session-safety endpoint is `GET /v1/session`.
+
 `status` reports this Chrome profile's state. `unverified` never proves login. `snapshot` exposes visible text and form labels, omitting input values, cookies, storage, and headers. `action(provider, kind, selector, value)` supports navigation clicks, fills, selects, and key presses; it rejects Generate and payment controls. Provider navigation stays on the selected HTTPS domain. User sign-in happens directly in the Chrome window.
 
 The browser client also has `stage`, `submit`, and `download` methods. They require a prepared job in `WebProviderGateway`, which persists a local SQLite ledger in the chosen project directory.

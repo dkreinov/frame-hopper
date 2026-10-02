@@ -447,6 +447,13 @@ def create_app(state_dir: Path | None = None) -> FastAPI:
     def models() -> dict[str, Any]:
         return {"model_families": list(MODEL_FAMILIES), "reviewed_on": REVIEWED_ON}
 
+    @app.get("/v1/session", dependencies=[Depends(authorized)])
+    async def session() -> dict[str, Any]:
+        async with operation_lock:
+            active = next((name for name, page in manager.pages.items()
+                           if not page.is_closed()), None)
+            return {"active_provider": active, "staged_job_count": len(manager.staged)}
+
     @app.get("/v1/providers", dependencies=[Depends(authorized)])
     def providers(model: str | None = None, media: str | None = None,
                   free_only: bool = False) -> dict[str, Any]:
