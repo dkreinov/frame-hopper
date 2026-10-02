@@ -8,7 +8,7 @@ import subprocess
 import sys
 import time
 from typing import Any, Mapping
-from urllib.parse import urlparse
+from urllib.parse import urlencode, urlparse
 
 import requests
 
@@ -81,8 +81,30 @@ class WebProviderBrowserClient:
             )
         return response.json()
 
-    def providers(self, *, timeout_seconds: float = 90) -> dict[str, Any]:
-        return self._call("GET", "/v1/providers", timeout_seconds=timeout_seconds)
+    def models(self) -> dict[str, Any]:
+        """List curated model families; prices and account access still need a live check."""
+        return self._call("GET", "/v1/models")
+
+    def providers(self, *, model: str | None = None, media: str | None = None,
+                  free_only: bool = False, timeout_seconds: float = 90) -> dict[str, Any]:
+        """Find websites carrying a model, with optional advertised free access.
+
+        `free_only` includes conditional promotions, so it never proves that
+        this account has credits or that a particular generation is free.
+        """
+        params = {}
+        if model:
+            params["model"] = model
+        if media:
+            params["media"] = media
+        if free_only:
+            params["free_only"] = "true"
+        suffix = "?" + urlencode(params) if params else ""
+        return self._call("GET", "/v1/providers" + suffix, timeout_seconds=timeout_seconds)
+
+    def sites_for_model(self, model: str, *, free_only: bool = True) -> dict[str, Any]:
+        """Return only sites listing this model; default to possible free use."""
+        return self.providers(model=model, free_only=free_only)
 
     def status(self, provider: str) -> dict[str, Any]:
         """Return this API's own browser state, not the in-app browser login."""

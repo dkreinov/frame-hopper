@@ -23,30 +23,11 @@ from pydantic import BaseModel, Field
 
 from backend.services.web_provider_gateway import WebProviderGateway
 from backend.services.web_provider_browser_state import private_state_dir
+from backend.services.web_provider_catalog import BY_NAME, MODEL_FAMILIES, PROVIDERS, REVIEWED_ON, select_providers
 
 
-PROVIDER_URLS = {
-    "kling": "https://kling.ai/app/",
-    "dreamina": "https://dreamina.capcut.com/ai-tool/generate?type=video",
-    "pixverse": "https://app.pixverse.ai/",
-    "vidu": "https://www.vidu.com/create/img2video",
-    "flow": "https://flow.google.com/",
-    "krea": "https://www.krea.ai/video",
-    "seaart": "https://www.seaart.ai/",
-    "openart": "https://openart.ai/home",
-    "hailuo": "https://hailuoai.video/create/image-to-video",
-}
-PROVIDER_HOSTS = {
-    "kling": ("kling.ai", "klingai.com"),
-    "dreamina": ("dreamina.capcut.com",),
-    "pixverse": ("pixverse.ai",),
-    "vidu": ("vidu.com",),
-    "flow": ("flow.google.com",),
-    "krea": ("krea.ai",),
-    "seaart": ("seaart.ai",),
-    "openart": ("openart.ai",),
-    "hailuo": ("hailuoai.video",),
-}
+PROVIDER_URLS = {provider.name: provider.url for provider in PROVIDERS}
+PROVIDER_HOSTS = {provider.name: provider.hosts for provider in PROVIDERS}
 SIGNED_OUT_MARKERS = {
     "dreamina": ("Sign in to start creating", "Sign in to Dreamina"),
 }
@@ -244,7 +225,10 @@ class BrowserManager:
             "session_scope": "shared_local_chrome_profile",
             "shares_google_cookies_with_other_providers": True,
             "shares_in_app_browser_session": False,
-            "start_end_frame_support": "advertised_unverified_for_this_account",
+            "start_end_frame_support": ("advertised_unverified_for_this_account"
+                                        if BY_NAME[provider].browser_support == "guarded_video_job"
+                                        else "not_calibrated"),
+            "browser_support": BY_NAME[provider].browser_support,
             "generation_calibration": "unverified",
         }
 
@@ -459,11 +443,27 @@ def create_app(state_dir: Path | None = None) -> FastAPI:
         if x_gateway_token is None or not secrets.compare_digest(x_gateway_token, token):
             raise HTTPException(401, "gateway token required")
 
+    @app.get("/v1/models", dependencies=[Depends(authorized)])
+    def models() -> dict[str, Any]:
+        return {"model_families": list(MODEL_FAMILIES), "reviewed_on": REVIEWED_ON}
+
     @app.get("/v1/providers", dependencies=[Depends(authorized)])
-    def providers() -> dict[str, Any]:
-        return {"providers": [{"name": name, "url": url, "open": name in manager.pages,
-                               "start_end_frame_support": "advertised_unverified_for_this_account"}
-                              for name, url in PROVIDER_URLS.items()]}
+    def providers(model: str | None = None, media: str | None = None,
+                  free_only: bool = False) -> dict[str, Any]:
+        try:
+            selected = select_providers(model=model, media=media, free_only=free_only)
+        except ValueError as error:
+            raise HTTPException(400, str(error)) from error
+        return {"reviewed_on": REVIEWED_ON, "providers": [{
+            "name": item.name, "url": item.url, "open": item.name in manager.pages,
+            "media": list(item.media), "model_access": item.models,
+            "free_offer": item.free_offer, "free_cadence": item.cadence,
+            "source": item.source, "browser_support": item.browser_support,
+            "limitation": item.limitation,
+            "start_end_frame_support": ("advertised_unverified_for_this_account"
+                                         if item.browser_support == "guarded_video_job"
+                                         else "not_calibrated"),
+        } for item in selected]}
 
     @app.get("/v1/providers/{provider}/status", dependencies=[Depends(authorized)])
     async def provider_status(provider: str) -> dict[str, Any]:

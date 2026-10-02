@@ -28,8 +28,35 @@ def test_loopback_api_requires_its_private_token(tmp_path: Path) -> None:
     assert response.status_code == 200
     assert {item["name"] for item in response.json()["providers"]} == {
         "kling", "dreamina", "pixverse", "vidu", "flow", "krea",
-        "seaart", "openart", "hailuo",
+        "seaart", "openart", "hailuo", "runway", "luma", "leonardo",
+        "firefly", "magnific", "elevenlabs", "cartesia", "fish-audio",
+        "minimax-audio", "suno",
     }
+
+
+def test_model_filter_tracks_model_specific_free_access(tmp_path: Path) -> None:
+    app = create_app(tmp_path)
+    with TestClient(app) as client:
+        token = (tmp_path / "access.token").read_text(encoding="ascii").strip()
+        headers = {"X-Gateway-Token": token}
+        all_kling = client.get("/v1/providers?model=kling", headers=headers)
+        free_kling = client.get("/v1/providers?model=kling&free_only=true", headers=headers)
+        audio = client.get("/v1/providers?media=audio&free_only=true", headers=headers)
+        mismatched = client.get("/v1/providers?model=elevenlabs&media=video", headers=headers)
+        models = client.get("/v1/models", headers=headers)
+        invalid = client.get("/v1/providers?model=retired-model", headers=headers)
+    assert all_kling.status_code == free_kling.status_code == audio.status_code == models.status_code == 200
+    assert {item["name"] for item in all_kling.json()["providers"]} == {
+        "kling", "pixverse", "krea", "openart", "luma", "firefly", "magnific",
+    }
+    assert [item["name"] for item in free_kling.json()["providers"]] == ["kling"]
+    assert free_kling.json()["providers"][0]["model_access"]["kling"] == "conditional"
+    assert {item["name"] for item in audio.json()["providers"]} == {
+        "firefly", "elevenlabs", "cartesia", "fish-audio", "minimax-audio", "suno",
+    }
+    assert "elevenlabs" in models.json()["model_families"]
+    assert mismatched.json()["providers"] == []
+    assert invalid.status_code == 400
 
 
 def test_status_does_not_confuse_iab_signin_with_local_profile(tmp_path: Path) -> None:

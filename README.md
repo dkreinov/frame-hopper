@@ -1,8 +1,8 @@
 # FrameHopper
 
-FrameHopper is a Codex skill and local Chrome browser bridge for video creation sites. It catalogs Kling, Dreamina, PixVerse, Vidu, Google Flow, Krea, SeaArt, OpenArt, and Hailuo. Agents can inspect visible forms, stage start/end images, and track guarded generation jobs through upload, submission, and download.
+FrameHopper is a Codex skill and local Chrome browser bridge for current video and audio creation sites. It routes by model family, so `sites_for_model("kling")` returns only sites offering Kling with a possible free option; `providers(model="kling")` also shows paid and unverified Kling hosts. The catalog includes ElevenLabs, Cartesia, Fish Audio, MiniMax Audio, Firefly, Runway, Luma, Leonardo, Suno, and Magnific alongside the original video sites. Agents can inspect visible forms; the original video flow tracks guarded start/end-frame jobs through upload, submission, and download.
 
-**Status:** Browser navigation and the guarded job flow have offline tests. The nine websites have not all been authenticated or verified end to end. Each site's current selectors, models, free balance, exact price, and output flow need live calibration. This uses website pages, not official provider APIs. Website changes may break it.
+**Status:** Browser navigation, model filtering, and the guarded video job flow have offline tests. The websites have not all been authenticated or verified end to end. Newly added sites have navigation and inspection only; audio generation and download are not yet implemented. Each site's current selectors, models, free balance, exact price, and output flow need live calibration. This uses website pages, not official provider APIs. Website changes may break it.
 
 ## Install as a Codex skill
 
@@ -29,6 +29,8 @@ from backend.services.web_provider_browser_client import WebProviderBrowserClien
 
 browser = WebProviderBrowserClient()
 print(browser.ensure_running())  # starts the local service if needed
+print(browser.sites_for_model("kling"))
+print(browser.providers(media="audio", free_only=True))
 browser.open("dreamina")
 print(browser.status("dreamina"))
 print(browser.snapshot("dreamina")["visible_text"][:1000])

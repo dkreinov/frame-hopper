@@ -9,13 +9,19 @@ from backend.services.web_provider_browser_client import WebProviderBrowserClien
 
 browser = WebProviderBrowserClient()
 browser.ensure_running()
-browser.providers()             # nine catalog entries
+browser.models()                # curated model families
+browser.sites_for_model("kling") # possible free Kling sites only
+browser.providers(model="kling") # every listed Kling site, with model-specific access
+browser.providers(media="audio", free_only=True)
+browser.providers()             # complete catalog
 browser.open("dreamina")       # reuse the one active tab
 browser.status("dreamina")
 browser.snapshot("dreamina")
 browser.screenshot("dreamina")
 browser.inspect("dreamina", "button")
 ```
+
+`providers(model=..., media=..., free_only=...)` filters the dated catalog by advertised model family and model-specific free access. `free_only` includes conditional promotions, so it does not establish available credits in this account. The HTTP routes are `GET /v1/models` and `GET /v1/providers?model=kling&free_only=true` (or `media=audio`). Read [current provider research](PROVIDER_RESEARCH.md) for source links and limitations. Newly added sites have navigation and inspection only; audio generation is not implemented.
 
 `status` reports this Chrome profile's state. `unverified` never proves login. `snapshot` exposes visible text and form labels, omitting input values, cookies, storage, and headers. `action(provider, kind, selector, value)` supports navigation clicks, fills, selects, and key presses; it rejects Generate and payment controls. Provider navigation stays on the selected HTTPS domain. User sign-in happens directly in the Chrome window.
 
