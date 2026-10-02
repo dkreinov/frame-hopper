@@ -42,9 +42,25 @@ def _print_table(report: dict, *, live: bool) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--model", help="Only sites listing this model family, e.g. kling")
-    parser.add_argument("--media", choices=("video", "audio"))
+    parser = argparse.ArgumentParser(
+        prog="python -m tools.cli.web_provider_inventory",
+        description="List each site's model families and advertised free offer; optionally inspect visible account balances.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Run from the project root or installed frame-hopper skill directory:
+  python -m tools.cli.web_provider_inventory --help
+  python -m tools.cli.web_provider_inventory              # offline catalog
+  python -m tools.cli.web_provider_inventory --live       # scan all sites
+  python -m tools.cli.web_provider_inventory --model kling --free-only --live
+  python -m tools.cli.web_provider_inventory --media audio --live --json
+
+The live scan uses the API's separate Chrome profile and navigates its one tab.
+It will not disturb staged uploads. Visible numbers are unverified; usable
+generations need a signed-in account and the exact selected model cost.""",
+    )
+    parser.add_argument("--model", metavar="FAMILY",
+                        help="Only sites listing this model family (for example, kling)")
+    parser.add_argument("--media", choices=("video", "audio"),
+                        help="Only video or audio model rows")
     parser.add_argument("--free-only", action="store_true",
                         help="Include only confirmed or conditional free model access")
     parser.add_argument("--live", action="store_true",

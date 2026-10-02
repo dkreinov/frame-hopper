@@ -63,3 +63,14 @@ def test_audio_catalog_omits_video_models(capsys) -> None:
     output = capsys.readouterr().out
     assert '"model": "elevenlabs"' in output
     assert '"model": "ray"' not in output
+
+
+def test_cli_help_shows_invocation_examples(capsys) -> None:
+    with pytest.raises(SystemExit) as stopped:
+        main(["--help"])
+    assert stopped.value.code == 0
+    help_text = capsys.readouterr().out
+    assert "usage: python -m tools.cli.web_provider_inventory" in help_text
+    assert "python -m tools.cli.web_provider_inventory --live" in help_text
+    assert "--model kling --free-only --live" in help_text
+    assert "--media audio --live --json" in help_text
